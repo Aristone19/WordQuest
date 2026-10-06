@@ -1,0 +1,813 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+
+<body>
+  <div id="loadingScreen" class="loading-screen" aria-live="polite" aria-busy="true">
+    <div class="loading-glow"></div>
+    <div class="loading-stars" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="loading-content">
+      <div class="loading-crest">
+        <div class="loading-rune loading-rune-left"></div>
+        <div class="loading-rune loading-rune-right"></div>
+        <img src="images/logo.png" alt="Word Quest logo" class="loading-logo">
+      </div>
+      <div class="loading-title">WORD QUEST</div>
+      <div class="loading-tag">Forging your next adventure...</div>
+      <div class="loading-bar" aria-hidden="true">
+        <span></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="app">
+    <header class="topbar">
+
+      <button class="brand" id="brandBtn" aria-label="Go to home">
+
+        <img src="images/logo.png" alt="Word Quest Logo" class="brand-logo">
+
+        <span>
+          <strong>WORD QUEST</strong>
+          <small>Find. Learn. Quest. Achieve.</small>
+        </span>
+
+      </button>
+
+      <div class="hud" id="globalHud">
+
+        <button class="hud-pill account-btn" id="accountBtn" title="Profiles on this device">
+          <span id="accountAvatar">👤</span>
+          <span id="accountName">Sign in</span>
+        </button>
+
+        <div class="hud-pill coin-hud">
+          <img src="images/kuwens.png" alt="Word Quest Coin" class="coin-icon">
+          <span id="hudCoins">0</span>
+        </div>
+
+        <div class="hud-pill">
+          🔥 <span id="hudStreak">0</span>
+        </div>
+
+        <div class="hud-pill">
+          ⭐ <span id="hudStars">0</span>
+        </div>
+
+        <button class="icon-btn" id="soundBtn" title="Toggle sound" aria-label="Toggle sound">
+          🔊
+        </button>
+
+        <button class="icon-btn" id="a11yBtn" title="Accessibility settings"
+          aria-label="Accessibility settings" aria-haspopup="dialog">
+          ⚙
+        </button>
+
+      </div>
+
+    </header>
+
+    <!-- Screen reader announcements. Hidden, but read aloud as it changes. -->
+    <div id="liveRegion" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="alertRegion" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+    <main>
+      <!-- HOME -->
+      <section class="screen active" id="homeScreen">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow">THE NEXT GENERATION WORD PUZZLE GAME</div>
+            <h1>WORD <span>QUEST</span></h1>
+            <p>
+              A web-based word-search adventure with quests, rewards, achievements,
+              boss puzzles, daily challenges, and strategic power-ups.
+            </p>
+            <div class="hero-actions">
+              <button class="btn primary" id="playBtn">
+                Continue Quest
+              </button>
+
+              <button class="btn ghost" id="quickPlayBtn">
+                Quick Play
+              </button>
+
+              <button class="btn ghost" id="dailyBtn">
+                Daily Challenge
+              </button>
+
+              <button class="btn ghost shop-open-btn" id="shopBtn">
+                🛒 Power-Up Shop
+              </button>
+            </div>
+            <p class="quest-hint" id="continueQuestHint"></p>
+          </div>
+          <div class="hero-card">
+            <div class="mini-grid" aria-hidden="true">
+              <span>W</span><span>O</span><span>R</span><span>D</span>
+              <span>Q</span><span>U</span><span>E</span><span>S</span>
+              <span>T</span><span>F</span><span>O</span><span>C</span>
+              <span>U</span><span>S</span><span>W</span><span>Q</span>
+            </div>
+            <div class="hero-rank">
+              <small>RANK</small>
+              <strong id="homeRank">Rookie Solver</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel">
+            <div class="panel-title">
+              <h2>Active Quests</h2>
+              <span class="tag">TODAY</span>
+            </div>
+            <div id="questPreview" class="stack"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-title">
+              <h2>Progress</h2>
+              <button class="text-btn" id="profileBtn">View Profile</button>
+            </div>
+            <div class="stats-grid">
+              <div><strong id="statWords">0</strong><span>Words Found</span></div>
+              <div><strong id="statPuzzles">0</strong><span>Puzzles Won</span></div>
+              <div><strong id="statBest">0</strong><span>Best Score</span></div>
+              <div><strong id="statLevel">1</strong><span>Player Level</span></div>
+              <div><strong id="statStars">0</strong><span>Quest Stars</span></div>
+              <div><strong id="statLearned">0</strong><span>Words Learned</span></div>
+            </div>
+          </article>
+
+          <article class="panel featured">
+            <div>
+              <span class="tag danger">BOSS</span>
+              <h2>Boss Puzzle</h2>
+              <p>Beat a high-pressure puzzle to earn a large reward.</p>
+            </div>
+            <button class="btn secondary" id="bossBtn">Challenge Boss</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- ACCOUNTS -->
+      <section class="screen" id="accountScreen">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">WORD QUEST PROFILES</div>
+            <h2>Who's playing?</h2>
+          </div>
+          <div class="campaign-total">
+            <strong id="accountCount">0</strong>
+            <span>PROFILES ON THIS DEVICE</span>
+          </div>
+        </div>
+
+        <div class="account-layout">
+          <article class="panel">
+            <h3>Choose a profile</h3>
+            <p class="account-help">
+              Each profile keeps its own level, coins, stars and word codex.
+              There is no e-mail, no password and nothing sent anywhere — it all stays on this device.
+            </p>
+            <div class="account-grid" id="accountGrid"></div>
+          </article>
+
+          <article class="panel">
+            <h3>Create a new profile</h3>
+
+            <label class="field-label" for="newAccountName">Display name</label>
+            <input class="field-input" id="newAccountName" type="text" maxlength="16"
+              placeholder="e.g. Kobs" autocomplete="off">
+
+            <label class="field-label">Avatar</label>
+            <div class="avatar-picker" id="avatarPicker"></div>
+
+            <label class="field-label" for="newAccountPin">PIN (optional, 4 digits)</label>
+            <input class="field-input" id="newAccountPin" type="password" inputmode="numeric"
+              maxlength="4" placeholder="Leave empty for no PIN" autocomplete="off">
+
+            <div class="purchase-message" id="accountMessage" aria-live="polite"></div>
+
+            <button class="btn primary full" id="createAccountBtn">Create Profile</button>
+
+            <hr>
+
+            <button class="btn ghost full" id="importAccountBtn">📥 Import a profile file</button>
+            <input type="file" id="importFile" accept="application/json,.json" class="hidden">
+          </article>
+        </div>
+      </section>
+
+      <!-- QUEST MAP -->
+      <section class="screen" id="campaignScreen">
+        <div class="page-head">
+          <button class="back-btn" data-go="homeScreen">← Back</button>
+          <div>
+            <div class="eyebrow">THE WORD QUEST CAMPAIGN</div>
+            <h2>Quest Map</h2>
+          </div>
+          <div class="campaign-total">
+            <strong id="campaignStars">0 / 144</strong>
+            <span>STARS EARNED</span>
+          </div>
+        </div>
+
+        <article class="panel">
+          <div class="campaign-status">
+            <div class="progress"><span id="campaignProgress"></span></div>
+            <small id="campaignNext"></small>
+          </div>
+
+          <div class="chapter-tabs" id="campaignChapters"></div>
+          <div class="level-list" id="campaignLevels"></div>
+
+          <p class="campaign-legend">
+            ⭐ Clear the level &nbsp;•&nbsp; ⭐⭐ Beat the star time &nbsp;•&nbsp; ⭐⭐⭐ Finish with 1 mistake or fewer
+          </p>
+        </article>
+      </section>
+
+      <!-- SETUP -->
+      <section class="screen" id="setupScreen">
+        <div class="page-head">
+          <button class="back-btn" data-go="homeScreen">← Back</button>
+          <div>
+            <div class="eyebrow">CHOOSE YOUR PATH</div>
+            <h2>Prepare Your Quest</h2>
+          </div>
+        </div>
+
+        <div class="setup-grid">
+          <article class="panel">
+            <h3>Category</h3>
+            <div class="choice-grid" id="categoryChoices"></div>
+          </article>
+
+          <article class="panel">
+            <h3>Difficulty</h3>
+            <div class="difficulty-list" id="difficultyChoices"></div>
+          </article>
+
+          <article class="panel mode-panel">
+            <h3>Game Mode</h3>
+            <div class="mode-options">
+              <label class="radio-card">
+                <input type="radio" name="mode" value="normal" checked>
+                <span><b>Adventure</b><small>Standard puzzle with progression.</small></span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="mode" value="timed">
+                <span><b>Time Rush</b><small>Beat the clock for a bonus.</small></span>
+              </label>
+            </div>
+            <button class="btn primary full" id="beginGameBtn">Begin Quest</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- GAME -->
+      <section class="screen" id="gameScreen">
+        <div class="game-head">
+          <div>
+            <div class="game-head-actions">
+              <button class="back-btn" id="quitGameBtn">← Quit</button>
+              <button class="text-btn shop-quick-btn" id="gameShopBtn">🛒 Shop</button>
+            </div>
+            <div class="eyebrow" id="gameModeLabel">ADVENTURE MODE</div>
+            <h2 id="gameTitle">Animals • Easy</h2>
+          </div>
+          <div class="game-stats">
+            <div><small>TIME</small><strong id="timeDisplay">03:00</strong></div>
+            <div><small>SCORE</small><strong id="scoreDisplay">0</strong></div>
+            <div><small>COMBO</small><strong id="comboDisplay">x1</strong></div>
+          </div>
+        </div>
+
+        <div class="event-banner hidden" id="eventBanner"></div>
+
+        <div class="game-layout">
+          <aside class="panel side-panel">
+            <div class="panel-title">
+              <h3>Words</h3>
+              <span id="wordCounter">0/0</span>
+            </div>
+            <div class="word-list" id="wordList"></div>
+
+            <hr>
+            <h3>Power-Ups</h3>
+            <div class="power-grid">
+              <button class="power-btn" data-power="time">
+                <span>⏱️</span><b>Time Boost</b><small id="powerTimeCount">0</small>
+              </button>
+              <button class="power-btn" data-power="hint">
+                <span>💡</span><b>Word Hint</b><small id="powerHintCount">0</small>
+              </button>
+              <button class="power-btn" data-power="finder">
+                <span>🧲</span><b>Word Finder</b><small id="powerFinderCount">0</small>
+              </button>
+              <button class="power-btn" data-power="multiplier">
+                <span>🔥</span><b>2× Points &amp; Coins</b><small id="powerMultiplierCount">0</small>
+              </button>
+              <button class="power-btn" data-power="shield">
+                <span>🛡️</span><b>Mistake Shield</b><small id="powerShieldCount">0</small>
+              </button>
+            </div>
+          </aside>
+
+          <section class="puzzle-wrap">
+            <div class="grid-toolbar">
+              <div id="currentQuestText">Find every hidden word.</div>
+              <div id="statusText" role="status" aria-live="polite">Drag across letters to select a word.</div>
+            </div>
+
+            <!-- Keyboard hints, shown only when the accessibility setting allows. -->
+            <div id="keyboardHelp" class="keyboard-help">
+              <strong>Keyboard:</strong>
+              <kbd>Tab</kbd> to the board &middot;
+              <kbd>Arrows</kbd> move &middot;
+              <kbd>Space</kbd> start a word &middot;
+              <kbd>Enter</kbd> submit &middot;
+              <kbd>Esc</kbd> cancel
+            </div>
+            <div id="wordGrid" class="word-grid" aria-label="Word search puzzle"></div>
+          </section>
+
+          <aside class="panel side-panel right">
+            <h3>Quest Progress</h3>
+            <div id="gameQuestProgress" class="stack"></div>
+
+            <hr>
+            <h3>Run Stats</h3>
+            <div class="run-stat"><span>Accuracy</span><strong id="accuracyDisplay">100%</strong></div>
+            <div class="run-stat"><span>Correct</span><strong id="correctDisplay">0</strong></div>
+            <div class="run-stat"><span>Mistakes</span><strong id="mistakeDisplay">0</strong></div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <section class="screen" id="resultsScreen">
+        <div class="results-card">
+          <div class="result-icon" id="resultIcon">🏆</div>
+          <div class="eyebrow" id="resultEyebrow">QUEST COMPLETE</div>
+          <h2 id="resultTitle">Victory!</h2>
+          <p id="resultMessage">You found every hidden word.</p>
+
+          <div class="result-stars hidden" id="resultStars"></div>
+          <p class="result-next" id="resultNext"></p>
+
+          <div class="result-stats">
+            <div><span>Score</span><strong id="resultScore">0</strong></div>
+            <div><span>Coins</span><strong id="resultCoins">+0</strong></div>
+            <div><span>Accuracy</span><strong id="resultAccuracy">100%</strong></div>
+            <div><span>Time Left</span><strong id="resultTime">00:00</strong></div>
+          </div>
+
+          <div id="rewardList" class="reward-list"></div>
+
+          <div class="results-actions">
+            <button class="btn primary" id="nextPuzzleBtn">Next Puzzle</button>
+            <button class="btn ghost hidden" id="resultsMapBtn">Quest Map</button>
+            <button class="btn ghost" id="resultsHomeBtn">Return Home</button>
+          </div>
+        </div>
+      </section>
+
+     <!-- PROFILE -->
+<section class="screen" id="profileScreen">
+
+  <div class="page-head">
+
+    <button class="back-btn" data-go="homeScreen">
+      ← Back
+    </button>
+
+    <div>
+      <div class="eyebrow">
+        WORD MASTER PROFILE
+      </div>
+
+      <h2>Your Journey</h2>
+    </div>
+
+  </div>
+
+
+  <div class="profile-grid">
+
+    <!-- PROFILE SUMMARY -->
+    <article class="panel profile-summary">
+
+      <div class="avatar">
+        WQ
+      </div>
+
+      <h3 id="profileRank">
+        Rookie Solver
+      </h3>
+
+      <p>
+        Level
+        <strong id="profileLevel">
+          1
+        </strong>
+      </p>
+
+      <div class="xp-bar">
+        <span id="xpFill"></span>
+      </div>
+
+      <small id="xpText">
+        0 / 500 XP
+      </small>
+
+
+      <!-- RANK PROGRESSION -->
+      <div class="rank-progress-card">
+
+        <div class="rank-current">
+
+          <small>
+            CURRENT RANK
+          </small>
+
+          <strong id="currentRankDisplay">
+            Rookie Solver
+          </strong>
+
+        </div>
+
+
+        <div class="rank-path">
+
+          <div class="rank-path-top">
+
+            <span id="currentRankLevel">
+              Level 1
+            </span>
+
+            <span id="nextRankLevel">
+              Level 3
+            </span>
+
+          </div>
+
+          <div class="rank-progress-bar">
+            <span id="rankProgressFill"></span>
+          </div>
+
+        </div>
+
+
+        <div class="next-rank-box">
+
+          <div
+            class="next-rank-icon"
+            id="nextRankIcon"
+          >
+            🏹
+          </div>
+
+          <div>
+
+            <small>
+              UPCOMING RANK
+            </small>
+
+            <strong id="nextRankName">
+              Word Hunter
+            </strong>
+
+            <p id="nextRankRequirement">
+              Unlocks at Level 3
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="rank-levels-left"
+          id="rankLevelsLeft"
+        >
+          ⚡ 2 levels until your next rank
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- ACHIEVEMENTS -->
+    <article class="panel">
+
+      <h3>
+        Achievements
+      </h3>
+
+      <div
+        id="achievementGrid"
+        class="achievement-grid"
+      ></div>
+
+    </article>
+
+
+    <!-- LIFETIME STATS -->
+    <article class="panel">
+
+      <h3>
+        Lifetime Stats
+      </h3>
+
+      <div class="stats-grid">
+
+        <div>
+          <strong id="pWords">0</strong>
+          <span>Words Found</span>
+        </div>
+
+        <div>
+          <strong id="pWins">0</strong>
+          <span>Puzzles Won</span>
+        </div>
+
+        <div>
+          <strong id="pBosses">0</strong>
+          <span>Bosses Defeated</span>
+        </div>
+
+        <div>
+          <strong id="pDaily">0</strong>
+          <span>Daily Wins</span>
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- QUEST MAP PROGRESS -->
+    <article class="panel">
+
+      <h3>
+        Quest Map Progress
+      </h3>
+
+      <div
+        id="chapterSummary"
+        class="stack"
+      ></div>
+
+    </article>
+
+
+    <!-- WORD CODEX -->
+    <article class="panel codex-panel">
+
+      <div class="panel-title">
+        <h3>
+          Words Learned
+        </h3>
+
+        <span class="tag" id="codexCount">
+          0 / 0
+        </span>
+      </div>
+
+      <div class="progress"><span id="codexProgress"></span></div>
+
+      <input
+        class="codex-search"
+        id="codexSearch"
+        type="search"
+        placeholder="Search your words or definitions…"
+        aria-label="Search learned words"
+      >
+
+      <div class="codex-list" id="codexList"></div>
+
+    </article>
+
+
+    <!-- ACCOUNT -->
+    <article class="panel">
+
+      <h3>
+        Profile
+      </h3>
+
+      <div class="profile-account">
+        <span class="account-avatar" id="profileAccountAvatar">👤</span>
+        <div>
+          <strong id="profileAccountName">Not signed in</strong>
+          <small id="profileAccountMeta"></small>
+        </div>
+      </div>
+
+      <div class="account-actions">
+        <button class="text-btn" id="profileSwitchBtn">Switch profile</button>
+        <button class="text-btn danger-text" id="profileSignOutBtn">Sign out</button>
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+    </main>
+
+    <!-- POWER-UP SHOP -->
+    <div class="modal hidden" id="shopModal">
+      <div class="modal-card shop-card">
+
+        <div class="shop-header">
+          <div>
+            <div class="eyebrow">WORD QUEST STORE</div>
+            <h3>Power-Up Shop</h3>
+            <p class="shop-subtitle">Spend your quest coins and prepare for tougher puzzles.</p>
+          </div>
+
+          <div class="shop-balance">
+            <img src="images/kuwens.png" alt="Coin">
+            <span id="shopCoins">0</span>
+          </div>
+        </div>
+
+        <div class="shop-grid">
+
+          <button class="shop-item" data-buy="time">
+            <span class="shop-icon">⏱️</span>
+            <div class="shop-copy">
+              <b>Time Boost</b>
+              <small>Adds 15 seconds to your current puzzle. Star times are not affected.</small>
+            </div>
+            <div class="shop-price">
+              <strong id="priceTime">35 Coins</strong>
+              <small id="ownedTime">Owned: 0</small>
+            </div>
+          </button>
+
+          <button class="shop-item" data-buy="hint">
+            <span class="shop-icon">💡</span>
+            <div class="shop-copy">
+              <b>Word Hint</b>
+              <small>Describes one hidden word: how long it is, which way it runs, its first letter, and which corner to search.</small>
+            </div>
+            <div class="shop-price">
+              <strong id="priceHint">20 Coins</strong>
+              <small id="ownedHint">Owned: 0</small>
+            </div>
+          </button>
+
+          <button class="shop-item" data-buy="finder">
+            <span class="shop-icon">🧲</span>
+            <div class="shop-copy">
+              <b>Word Finder</b>
+              <small>Lights up a whole hidden word on the board for 2 seconds and names it.</small>
+            </div>
+            <div class="shop-price">
+              <strong id="priceFinder">60 Coins</strong>
+              <small id="ownedFinder">Owned: 0</small>
+            </div>
+          </button>
+
+          <button class="shop-item" data-buy="multiplier">
+            <span class="shop-icon">🔥</span>
+            <div class="shop-copy">
+              <b>2× Points &amp; Coins</b>
+              <small>Doubles the points and coins from this puzzle. It only pays out if you clear it.</small>
+            </div>
+            <div class="shop-price">
+              <strong id="priceMultiplier">120 Coins</strong>
+              <small id="ownedMultiplier">Owned: 0</small>
+            </div>
+          </button>
+
+          <button class="shop-item" data-buy="shield">
+            <span class="shop-icon">🛡️</span>
+            <div class="shop-copy">
+              <b>Mistake Shield</b>
+              <small>Blocks your next wrong guess, protecting your combo and your ⭐⭐⭐ run.</small>
+            </div>
+            <div class="shop-price">
+              <strong id="priceShield">30 Coins</strong>
+              <small id="ownedShield">Owned: 0</small>
+            </div>
+          </button>
+
+        </div>
+
+        <div class="shop-section-head">
+          <h4>Permanent Upgrades</h4>
+          <small>One-time buys that never run out — the long-term use for your coins.</small>
+        </div>
+
+        <div class="shop-grid" id="upgradeGrid"></div>
+
+        <div class="purchase-message" id="upgradeMessage" aria-live="polite"></div>
+
+        <div class="purchase-message" id="purchaseMessage" aria-live="polite"></div>
+
+        <button class="btn primary full" id="closeShopBtn">
+          Close Shop
+        </button>
+      </div>
+    </div>
+
+
+    <!-- PROMPT (PIN / rename) -->
+    <div class="modal hidden" id="promptModal">
+
+      <div class="modal-card">
+
+        <h3 id="promptTitle">
+          Enter PIN
+        </h3>
+
+        <p id="promptHint"></p>
+
+        <input class="field-input" id="promptInput" type="text" autocomplete="off">
+
+        <div class="prompt-actions">
+          <button class="btn primary" id="promptOk">OK</button>
+          <button class="btn ghost" id="promptCancel">Cancel</button>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ACCESSIBILITY SETTINGS -->
+    <div class="modal hidden" id="a11yModal" role="dialog" aria-modal="true"
+      aria-labelledby="a11yTitle">
+      <div class="modal-card a11y-card">
+
+        <div class="shop-header">
+          <div>
+            <div class="eyebrow">MAKE IT YOURS</div>
+            <h3 id="a11yTitle">Accessibility</h3>
+            <p class="shop-subtitle">
+              Word Quest is fully playable with a keyboard alone. These settings are
+              saved to this profile.
+            </p>
+          </div>
+        </div>
+
+        <div class="a11y-list" id="a11yList" role="group" aria-label="Accessibility settings"></div>
+
+        <div class="a11y-note">
+          <strong>Reduced motion</strong> is switched on automatically if your
+          operating system asks for it.
+        </div>
+
+        <button class="btn primary full" id="closeA11yBtn">Close</button>
+      </div>
+    </div>
+
+    <!-- YOUR EXISTING NOTICE MODAL -->
+    <div class="modal hidden" id="modal">
+
+      <div class="modal-card">
+
+        <h3 id="modalTitle">
+          Notice
+        </h3>
+
+        <p id="modalText"></p>
+
+        <button class="btn primary" id="modalClose">
+          OK
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
